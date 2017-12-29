@@ -282,6 +282,25 @@ function createComment(url, request) {
   return response;
 }
 
+function updateComment(url, request) {
+  const id = Number(url.split('/').filter(segment => segment)[1]);
+  const savedComment = database.comments[id];
+  const requestComment = request.body && request.body.comment;
+  const response = {};
+
+  if (!id || !requestComment) {
+    response.status = 400;
+  } else if (!savedComment) {
+    response.status = 404;
+  } else {
+    savedComment.comment = requestComment.comment || savedComment.comment;
+
+    response.body = {comment: savedComment};
+    response.status = 200;
+  }
+
+  return response;
+}
 // Write all code above this line.
 
 const http = require('http');
